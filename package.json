@@ -1,9 +1,9 @@
 {
   "name": "tabletimepro-site",
-  "version": "1.0.0",
   "private": true,
-  "license": "UNLICENSED",
+  "version": "1.0.0",
   "dependencies": {
-    "stripe": "^14.0.0"
+    "stripe": "^14.0.0",
+    "@netlify/blobs": "^6.2.0"
   }
 }
