@@ -1,26 +1,79 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Subscription started</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"></head><body><main class="container"><h1>You're in!</h1><p>Thanks for subscribing to <strong>TableTime Pro</strong>. We'll email your access details shortly.</p><p><a href="/">Back to homepage</a></p></main></body></html>
-<script>
-(async () => {
-  const params = new URLSearchParams(location.search);
-  const sid = params.get('session_id');
-  if (!sid) return;
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Subscription started</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <style>
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>You're in!</h1>
+      <p>Thanks for subscribing to <strong>TableTime Pro</strong>. We’re setting up your workspace…</p>
 
-  try {
-    const res = await fetch('/.netlify/functions/provision-info?session_id=' + encodeURIComponent(sid));
-    if (!res.ok) return;
-    const info = await res.json();
+      <!-- Status / errors get written here -->
+      <div id="status" role="status">Looking up your subscription…</div>
 
-    // Save for the apps
-    localStorage.setItem('ttpro_tenant', info.tenant);
-    localStorage.setItem('ttpro_key', info.key);
+      <!-- We reveal these after provisioning info returns -->
+      <div id="launches" class="hidden" style="margin-top:1rem;">
+        <h3>Your apps</h3>
+        <p><strong>Tenant:</strong> <span id="tenant-label"></span></p>
+        <div class="grid">
+          <a id="launch-staff" class="contrast" href="#" role="button">Open Staff App</a>
+          <a id="launch-venue" class="contrast" href="#" role="button">Open Venue Portal</a>
+        </div>
+      </div>
 
-    // Update launch buttons if present
-    const staffBtn = document.getElementById('launch-staff');   // add id to your button
-    const venueBtn = document.getElementById('launch-venue');   // add id to your button
-    if (staffBtn) staffBtn.href = 'https://staff.tabletimepro.com/?tenant=' + info.tenant;
-    if (venueBtn) venueBtn.href = 'https://venue.tabletimepro.com/?tenant=' + info.tenant;
-  } catch (e) {
-    console.warn('provision-info failed', e);
-  }
-})();
-</script>
+      <p style="margin-top:1.25rem;"><a href="/">Back to homepage</a></p>
+    </main>
+
+    <script>
+      (async () => {
+        const statusEl = document.getElementById('status');
+        const launches = document.getElementById('launches');
+        const tenantLbl = document.getElementById('tenant-label');
+        const staffBtn  = document.getElementById('launch-staff');
+        const venueBtn  = document.getElementById('launch-venue');
+
+        const params = new URLSearchParams(location.search);
+        const sid = params.get('session_id');
+
+        if (!sid) {
+          statusEl.textContent = 'No session_id in URL. If you reached this page directly, please return to checkout or use the link in your confirmation email.';
+          return;
+        }
+
+        try {
+          statusEl.textContent = 'Provisioning your workspace…';
+
+          const res = await fetch('/.netlify/functions/provision-info?session_id=' + encodeURIComponent(sid));
+          if (!res.ok) {
+            statusEl.textContent = 'Still setting things up. This usually takes a few seconds. Please refresh in a moment.';
+            return;
+          }
+
+          const info = await res.json(); // expects { tenant, key, ... }
+
+          // Cache for the apps (optional)
+          if (info.tenant) localStorage.setItem('ttpro_tenant', info.tenant);
+          if (info.key)    localStorage.setItem('ttpro_key', info.key);
+
+          // Wire links
+          const tenantQS = encodeURIComponent(info.tenant || '');
+          staffBtn.href = 'https://staff.tabletimepro.com/?tenant=' + tenantQS;
+          venueBtn.href = 'https://venue.tabletimepro.com/?tenant=' + tenantQS;
+
+          tenantLbl.textContent = info.tenant || '(pending)';
+          statusEl.textContent = 'All set!';
+          launches.classList.remove('hidden');
+        } catch (e) {
+          console.warn('provision-info failed', e);
+          statusEl.textContent = 'We couldn’t complete setup automatically. Please refresh in a few seconds or contact support.';
+        }
+      })();
+    </script>
+  </body>
+</html>
