@@ -11,6 +11,16 @@ function useStore(name, context) {
   }
 }
 
+async function readJSON(store, key) {
+  try {
+    const v = await store.get(key, { type: "json" });
+    if (v !== undefined) return v;
+  } catch (_) {}
+  const raw = await store.get(key);
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
 function cors() {
   return {
     "Access-Control-Allow-Origin": "*",
@@ -28,7 +38,6 @@ exports.handler = async (event, context) => {
     return { statusCode: 405, headers: cors(), body: "Method Not Allowed" };
   }
 
-  // Simplest way to read the query param
   const sid = (event.queryStringParameters || {}).session_id;
   if (!sid) {
     return { statusCode: 400, headers: cors(), body: JSON.stringify({ error: "session_id required" }) };
@@ -38,12 +47,12 @@ exports.handler = async (event, context) => {
     const maps    = useStore("ttpro_maps", context);
     const tenants = useStore("ttpro_customers", context);
 
-    const m = await maps.getJSON(`sessions/${sid}.json`);
+    const m = await readJSON(maps, `sessions/${sid}.json`);
     if (!m) {
       return { statusCode: 404, headers: cors(), body: JSON.stringify({ error: "session not found" }) };
     }
 
-    const t = await tenants.getJSON(`tenants/${m.customerId}.json`);
+    const t = await readJSON(tenants, `tenants/${m.customerId}.json`);
     if (!t) {
       return { statusCode: 404, headers: cors(), body: JSON.stringify({ error: "tenant not found" }) };
     }
