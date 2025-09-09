@@ -3,27 +3,33 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { getStore } = require("@netlify/blobs");
 const crypto = require("crypto");
 
-// Use Netlify's automatic context when available, otherwise fall back to env vars
+// Use Netlify context if available; otherwise fall back to portable API
 function useStore(name, context) {
   try {
-    // Works when functions run on Netlify (recommended)
     return getStore({ name, context });
   } catch {
-    // Portable fallback (requires NETLIFY_SITE_ID + NETLIFY_API_TOKEN env vars)
     const siteID = process.env.NETLIFY_SITE_ID;
     const token  = process.env.NETLIFY_API_TOKEN;
     return getStore({ name, siteID, token });
   }
 }
 
-// (not used by Stripe, but keep if you reuse this pattern elsewhere)
-function cors() {
-  return {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Content-Type": "application/json",
-  };
+// Helpers that work on all Blobs clients
+async function readJSON(store, key) {
+  // Try native JSON mode if supported
+  try {
+    const v = await store.get(key, { type: "json" });
+    if (v !== undefined) return v;         // if key missing, returns null
+  } catch (_) {}
+  // Fallback to string + manual parse
+  const raw = await store.get(key);
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+async function writeJSON(store, key, obj, opts = {}) {
+  const body = JSON.stringify(obj, null, 2);
+  return store.set(key, body, { contentType: "application/json", ...opts });
 }
 
 exports.handler = async (event, context) => {
@@ -51,7 +57,7 @@ exports.handler = async (event, context) => {
         session.customer_email ||
         "unknown@example.com";
 
-      // Try to expand price IDs for the plan
+      // Expand line items to capture price IDs (optional)
       let priceIds = [];
       try {
         const full = await stripe.checkout.sessions.retrieve(session.id, {
@@ -64,14 +70,14 @@ exports.handler = async (event, context) => {
         console.warn("Could not expand line items:", e.message);
       }
 
-      // ✅ Use the helper for all stores
+      // Stores
       const tenants = useStore("ttpro_customers", context);
       const configs = useStore("ttpro_configs", context);
       const maps    = useStore("ttpro_maps", context);
 
       // 1) Ensure tenant record
       const tenantKey = `tenants/${session.customer}.json`;
-      let tenant = await tenants.getJSON(tenantKey);
+      let tenant = await readJSON(tenants, tenantKey);
       if (!tenant) {
         tenant = {
           customerId: session.customer,             // cus_...
@@ -82,26 +88,27 @@ exports.handler = async (event, context) => {
           secret: crypto.randomBytes(24).toString("hex"),
           createdAt: new Date().toISOString(),
         };
-        await tenants.setJSON(tenantKey, tenant);
+        await writeJSON(tenants, tenantKey, tenant);
       }
 
       // 2) Seed default config if none
       const cfgKey = `configs/${session.customer}.json`;
-      const existing = await configs.getJSON(cfgKey);
+      const existing = await readJSON(configs, cfgKey);
       if (!existing) {
         const defaultConfig = {
           tables: ["Table 1", "Table 2", "Table 3", "Table 4"],
           staff: [],
           settings: { taxRate: 0, rounding: "none" },
         };
-        await configs.setJSON(cfgKey, defaultConfig);
+        await writeJSON(configs, cfgKey, defaultConfig);
       }
 
-      // 3) Map session_id -> customer for success page lookup
-      await maps.setJSON(
+      // 3) Map session_id -> customer for success page lookup (24h TTL)
+      await writeJSON(
+        maps,
         `sessions/${session.id}.json`,
         { customerId: session.customer },
-        { ttl: 60 * 60 * 24 } // 24h
+        { ttl: 60 * 60 * 24 }
       );
 
       console.log("✅ Provisioned tenant", {
