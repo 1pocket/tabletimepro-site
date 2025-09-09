@@ -3,6 +3,29 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { getStore } = require("@netlify/blobs");
 const crypto = require("crypto");
 
+// Use Netlify's automatic context when available, otherwise fall back to env vars
+function useStore(name, context) {
+  try {
+    // Works when functions run on Netlify (recommended)
+    return getStore({ name, context });
+  } catch {
+    // Portable fallback (requires NETLIFY_SITE_ID + NETLIFY_API_TOKEN env vars)
+    const siteID = process.env.NETLIFY_SITE_ID;
+    const token  = process.env.NETLIFY_API_TOKEN;
+    return getStore({ name, siteID, token });
+  }
+}
+
+// (not used by Stripe, but keep if you reuse this pattern elsewhere)
+function cors() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Content-Type": "application/json",
+  };
+}
+
 exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -41,10 +64,10 @@ exports.handler = async (event, context) => {
         console.warn("Could not expand line items:", e.message);
       }
 
-      // ✅ Create stores using the portable API (pass context)
+      // ✅ Use the helper for all stores
       const tenants = useStore("ttpro_customers", context);
-      const configs = getStore({ name: "ttpro_configs", context });
-      const maps    = getStore({ name: "ttpro_maps", context });
+      const configs = useStore("ttpro_configs", context);
+      const maps    = useStore("ttpro_maps", context);
 
       // 1) Ensure tenant record
       const tenantKey = `tenants/${session.customer}.json`;
