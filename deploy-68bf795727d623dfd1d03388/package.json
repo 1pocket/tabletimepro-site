@@ -1,0 +1,9 @@
+{
+  "name": "tabletimepro-site",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}

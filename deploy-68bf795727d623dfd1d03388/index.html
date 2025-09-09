@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TableTime Pro — Pool Table Time Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="description" content="TableTime Pro: enterprise-grade pool table time management. Start, stop, and track sessions in seconds. Clean exports for payouts. $49/month, updates & support included." />
+    <style>
+      :root{ --brand:#00e5a8; --brand-2:#5eead4 }
+      html,body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji" }
+      html { scroll-behavior: smooth; }
+      .glass { backdrop-filter: blur(10px); background: rgba(3,7,18,.55); border: 1px solid rgba(255,255,255,.08) }
+      .hero { background-image: linear-gradient(rgba(2,6,23,.85), rgba(2,6,23,.65), rgba(2,6,23,.9)), url('./images/ttpro-hero.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+      .shadow-elev { box-shadow: 0 10px 30px rgba(0,0,0,.45) }
+      .badge { background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%) }
+    </style>
+  </head>
+  <body class="bg-slate-950 text-slate-100">
+    <header class="sticky top-0 z-40 border-b border-white/5 bg-slate-950/70 backdrop-blur">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center h-16 justify-between">
+        <a href="#" class="flex items-center gap-3">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl badge text-slate-900 font-extrabold">TT</span>
+          <span class="font-semibold tracking-tight">TableTime Pro</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm">
+          <a href="#features" class="hover:text-teal-300/90">Features</a>
+          <a href="#pricing" class="hover:text-teal-300/90">Pricing</a>
+          <a href="#add-ons" class="hover:text-teal-300/90">Add-ons</a>
+          <a href="#contact" class="hover:text-teal-300/90">Contact</a>
+        </nav>
+        <div class="flex items-center gap-2">
+          <a href="https://staff.tabletimepro.com" class="px-4 py-2 text-sm rounded-xl glass hover:border-white/20">Staff App</a>
+          <a href="https://venue.tabletimepro.com" class="px-4 py-2 text-sm rounded-xl glass hover:border-white/20">Venue Portal</a>
+          <a href="./operator.html" class="px-4 py-2 text-sm rounded-xl glass hover:border-white/20">Operator</a>
+          <a href="#pricing" class="ml-2 px-4 py-2 text-sm font-semibold rounded-xl bg-teal-400 text-slate-900 hover:bg-teal-300">Get Started</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-28 md:py-36">
+        <div class="max-w-3xl">
+          <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-slate-900 badge">Enterprise-grade • Built for pool halls</span>
+          <h1 class="mt-6 text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
+            Pool table time management made easy
+          </h1>
+          <p class="mt-6 text-lg text-slate-200/90">
+            Taking the headache and guesswork out of pool table time management. Start, stop, and track sessions in seconds. Clean exports for payouts. Loved by pool halls, bars, and rec rooms.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-3">
+            <a href="https://staff.tabletimepro.com" class="inline-flex items-center rounded-xl bg-white text-slate-900 px-5 py-3 font-semibold shadow-elev hover:bg-slate-100">Launch Staff App</a>
+            <a href="#features" class="inline-flex items-center rounded-xl glass px-5 py-3 font-semibold hover:border-white/20">See features</a>
+          </div>
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-slate-300/90">
+            <div class="glass rounded-2xl p-4"><p class="font-semibold text-white">Fast workflow</p><p class="mt-1">Open a shift, tap <em>Start</em>, and let staff focus on guests—not math.</p></div>
+            <div class="glass rounded-2xl p-4"><p class="font-semibold text-white">Accurate totals</p><p class="mt-1">Built-in rounding, tax, and signed records keep payouts verifiable.</p></div>
+            <div class="glass rounded-2xl p-4"><p class="font-semibold text-white">Security</p><p class="mt-1">Role-based access with tamper-evident audit trails for every session.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="py-8 pb-20 scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">What makes it <span class="text-teal-300">enterprise-ready</span></h2>
+        <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <article class="glass rounded-2xl p-6"><h3 class="font-semibold">Role-based controls</h3><p class="mt-2 text-slate-300">Separate Staff, Manager, and Operator portals keep responsibilities clear and secure.</p></article>
+          <article class="glass rounded-2xl p-6"><h3 class="font-semibold">Signed records</h3><p class="mt-2 text-slate-300">Every session can be cryptographically signed to prevent edits after the fact.</p></article>
+          <article class="glass rounded-2xl p-6"><h3 class="font-semibold">Accurate taxes & rounding</h3><p class="mt-2 text-slate-300">Built-in math you can trust—no more slip-ups during closeout.</p></article>
+          <article class="glass rounded-2xl p-6"><h3 class="font-semibold">CSV exports</h3><p class="mt-2 text-slate-300">One-click exports for payouts and audits keep accountants happy.</p></article>
+          <article class="glass rounded-2xl p-6"><h3 class="font-semibold">Scales with your room</h3><p class="mt-2 text-slate-300">Add tables in seconds. Columns adapt automatically across devices.</p></article>
+          <article class="glass rounded-2xl p-6"><h3 class="font-semibold">Two-player capture</h3><p class="mt-2 text-slate-300">Optionally record both players for better insights into regulars and leagues.</p></article>
+        </div>
+      </div>
+    </section>
+
+<section id="pricing" class="py-24 bg-gradient-to-b from-slate-950 to-slate-900 scroll-mt-24">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Simple pricing</h2>
+      <p class="mt-3 text-slate-300">Pick the plan that fits your room. Cancel anytime.</p>
+    </div>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <!-- BASIC -->
+      <div class="glass rounded-3xl p-8 shadow-elev">
+        <div class="flex items-start justify-between">
+          <div>
+            <h3 class="text-xl font-semibold">Basic</h3>
+            <p class="text-slate-300 mt-1">Everything you need for one venue.</p>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-slate-400 line-through">$49 / mo</div>
+            <div class="mt-1 text-4xl font-extrabold text-white">$29<span class="text-xl align-top font-semibold">/mo</span></div>
+            <div class="text-xs text-slate-400">billed annually</div>
+          </div>
+        </div>
+
+        <span class="inline-flex mt-4 items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-slate-900 badge">
+          Save ~40% annually
+        </span>
+
+        <ul class="mt-6 space-y-3 text-slate-200 text-sm">
+          <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Unlimited tables & sessions</span></li>
+          <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Manager & Operator portals</span></li>
+          <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>CSV exports + signed records</span></li>
+          <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Email support & ongoing updates</span></li>
+        </ul>
+
+        <div class="mt-8 grid gap-2">
+          <!-- Primary: Annual -->
+          <button class="buy-btn w-full inline-flex justify-center rounded-xl bg-teal-400 text-slate-900 px-5 py-3 font-semibold hover:bg-teal-300"
+                  data-plan="basic_annual">Go Basic — $29/mo (annual)</button>
+          <!-- Secondary: Monthly -->
+          <button class="buy-btn w-full inline-flex justify-center rounded-xl bg-white text-slate-900 px-5 py-3 font-semibold hover:bg-slate-100"
+                  data-plan="basic_monthly">Or $49/mo — pay monthly</button>
+        </div>
+      </div>
+
+      <!-- PRO -->
+      <div class="glass rounded-3xl p-8 shadow-elev ring-1 ring-white/10">
+        <div class="flex items-start justify-between">
+          <div>
+            <h3 class="text-xl font-semibold">Pro</h3>
+            <p class="text-slate-300 mt-1">Multi-venue & integrations.</p>
+          </div>
+          <div class="text-right">
+            <div class="text-sm text-slate-400 line-through">$99 / mo</div>
+            <div class="mt-1 text-4xl font-extrabold text-white">$69<span class="text-xl align-top font-semibold">/mo</span></div>
+            <div class="text-xs text-slate-400">billed annually</div>
+          </div>
+        </div>
+
+        <span class="inline-flex mt-4 items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-slate-900 badge">
+          Save ~30% annually
+        </span>
+
+        <ul class="mt-6 space-y-3 text-slate-200 text-sm">
+          <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Everything in Basic</span></li>
+          <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Multi-venue dashboards</span></li>
+          <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Priority support</span></li>
+          <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Integrations & API access</span></li>
+        </ul>
+
+        <div class="mt-8 grid gap-2">
+          <!-- Primary: Annual -->
+          <button class="buy-btn w-full inline-flex justify-center rounded-xl bg-teal-400 text-slate-900 px-5 py-3 font-semibold hover:bg-teal-300"
+                  data-plan="pro_annual">Start Pro — $69/mo (annual)</button>
+          <!-- Secondary: Monthly -->
+          <button class="buy-btn w-full inline-flex justify-center rounded-xl bg-white text-slate-900 px-5 py-3 font-semibold hover:bg-slate-100"
+                  data-plan="pro_monthly">Or $99/mo — pay monthly</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick compare -->
+    <div class="mt-10 glass rounded-2xl p-6">
+      <h4 class="text-sm tracking-wide text-slate-400 uppercase">Compare plans</h4>
+      <div class="mt-4 grid grid-cols-3 text-sm">
+        <div></div>
+        <div class="font-semibold">Basic</div>
+        <div class="font-semibold">Pro</div>
+
+        <div class="py-2 text-slate-300">Unlimited tables & sessions</div>
+        <div class="py-2">✓</div><div class="py-2">✓</div>
+
+        <div class="py-2 text-slate-300">Manager & Operator portals</div>
+        <div class="py-2">✓</div><div class="py-2">✓</div>
+
+        <div class="py-2 text-slate-300">CSV exports + signed records</div>
+        <div class="py-2">✓</div><div class="py-2">✓</div>
+
+        <div class="py-2 text-slate-300">Multi-venue dashboards</div>
+        <div class="py-2">—</div><div class="py-2">✓</div>
+
+        <div class="py-2 text-slate-300">Integrations & API access</div>
+        <div class="py-2">—</div><div class="py-2">✓</div>
+
+        <div class="py-2 text-slate-300">Priority support</div>
+        <div class="py-2">—</div><div class="py-2">✓</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+        
+
+    <section id="add-ons" class="py-24 scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10 items-center">
+        <div class="order-2 md:order-1">
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Amusement Route Management <span class="text-sm align-top ml-1 px-2 py-1 rounded-full bg-white/10">Add-on</span></h2>
+          <p class="mt-4 text-slate-300">Operate jukeboxes, pool tables, darts, and more across multiple locations with collections, splits, and route reports. Seamlessly integrates with TableTime Pro so your time-based table revenue sits next to your coin-op data.</p>
+          <ul class="mt-6 space-y-3 text-slate-200 text-sm">
+            <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Location dashboards & collection logs</span></li>
+            <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Owner splits & payout exports</span></li>
+            <li class="flex gap-3"><span class="mt-1.5 h-2 w-2 rounded-full bg-teal-400"></span><span>Device-level performance insights</span></li>
+          </ul>
+        </div>
+        <div class="order-1 md:order-2 glass rounded-3xl p-6 shadow-elev">
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div class="rounded-2xl bg-slate-900/60 p-4 border border-white/5"><p class="text-slate-400">Collections</p><p class="mt-1 font-semibold">Track pulls by date/device</p></div>
+            <div class="rounded-2xl bg-slate-900/60 p-4 border border-white/5"><p class="text-slate-400">Splits</p><p class="mt-1 font-semibold">Automatic venue/operator math</p></div>
+            <div class="rounded-2xl bg-slate-900/60 p-4 border border-white/5"><p class="text-slate-400">Exports</p><p class="mt-1 font-semibold">CSV for accounting</p></div>
+            <div class="rounded-2xl bg-slate-900/60 p-4 border border-white/5"><p class="text-slate-400">Integrations</p><p class="mt-1 font-semibold">Works with TableTime Pro</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="py-20 border-t border-white/5 scroll-mt-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Ready to see it in action?</h2>
+        <p class="mt-3 text-slate-300">We’ll help you set up pricing, rounding, and exports in minutes.</p>
+        <div class="mt-8 flex justify-center gap-3">
+          <a href="mailto:hello@tabletimepro.com" class="inline-flex items-center rounded-xl bg-white text-slate-900 px-5 py-3 font-semibold shadow-elev hover:bg-slate-100">Email us</a>
+          <a href="https://venue.tabletimepro.com" class="inline-flex items-center rounded-xl glass px-5 py-3 font-semibold hover:border-white/20">Open Venue Portal</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="py-10 text-center text-xs text-slate-400 border-t border-white/5">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <p>© <span id="y"></span> TableTime Pro. All rights reserved.</p>
+      </div>
+    </footer>
+
+       <!-- Checkout buttons (Payment Links) -->
+    <script src="./config.js"></script>
+    <script>
+      // Footer year
+      const y = document.getElementById('y');
+      if (y) y.textContent = new Date().getFullYear();
+
+      // Plan links from config.js
+      const LINKS = window.TTPRO_LINKS || {};
+
+      function go(planKey, btn) {
+        const url = (LINKS[planKey] || '').trim();
+        if (!url) {
+          alert('Checkout link not set for: ' + planKey + ' — update it in config.js');
+          return;
+        }
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Redirecting…';
+        }
+        window.location.href = url;
+      }
+
+      // Multi-plan buttons (e.g., <button class="buy-btn" data-plan="basic_annual">…</button>)
+      document.querySelectorAll('.buy-btn[data-plan]').forEach((btn) => {
+        btn.addEventListener('click', () => go(btn.dataset.plan, btn));
+      });
+
+      // Back-compat: single "Start now" button goes to Basic Monthly
+      const single = document.getElementById('start-subscription');
+      if (single) {
+        single.addEventListener('click', () => go('basic_monthly', single));
+      }
+    </script>
+  </body>
+</html>

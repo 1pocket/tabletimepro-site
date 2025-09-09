@@ -1,0 +1,16 @@
+[build]
+  functions = "netlify/functions"
+
+# (Optional) ensure clean URLs and caching
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
+
+# Redirect old function path if needed
+[[redirects]]
+  from = "/create-checkout"
+  to = "/.netlify/functions/create-checkout-session"
+  status = 200
