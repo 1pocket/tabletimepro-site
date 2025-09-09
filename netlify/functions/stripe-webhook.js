@@ -42,7 +42,7 @@ exports.handler = async (event, context) => {
       }
 
       // ✅ Create stores using the portable API (pass context)
-      const tenants = getStore({ name: "ttpro_customers", context });
+      const tenants = useStore("ttpro_customers", context);
       const configs = getStore({ name: "ttpro_configs", context });
       const maps    = getStore({ name: "ttpro_maps", context });
 
