@@ -1,5 +1,6 @@
 // netlify/functions/stripe-webhook.js
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const { getStore } = require("@netlify/blobs");
 const crypto = require("crypto");
 
 exports.handler = async (event, context) => {
@@ -27,7 +28,7 @@ exports.handler = async (event, context) => {
         session.customer_email ||
         "unknown@example.com";
 
-      // Optionally expand to get price IDs
+      // Try to expand price IDs for the plan
       let priceIds = [];
       try {
         const full = await stripe.checkout.sessions.retrieve(session.id, {
@@ -40,15 +41,10 @@ exports.handler = async (event, context) => {
         console.warn("Could not expand line items:", e.message);
       }
 
-      // ✅ Use Netlify Function runtime Blobs stores
-      const tenants = context?.blobs?.store("ttpro_customers");
-      const configs = context?.blobs?.store("ttpro_configs");
-      const maps    = context?.blobs?.store("ttpro_maps");
-
-      if (!tenants || !configs || !maps) {
-        console.error("Blobs not available in function context");
-        return { statusCode: 500, body: "Blobs not available" };
-      }
+      // ✅ Create stores using the portable API (pass context)
+      const tenants = getStore({ name: "ttpro_customers", context });
+      const configs = getStore({ name: "ttpro_configs", context });
+      const maps    = getStore({ name: "ttpro_maps", context });
 
       // 1) Ensure tenant record
       const tenantKey = `tenants/${session.customer}.json`;
@@ -78,7 +74,7 @@ exports.handler = async (event, context) => {
         await configs.setJSON(cfgKey, defaultConfig);
       }
 
-      // 3) Map session_id -> customer so success.html can fetch write key
+      // 3) Map session_id -> customer for success page lookup
       await maps.setJSON(
         `sessions/${session.id}.json`,
         { customerId: session.customer },
@@ -95,13 +91,11 @@ exports.handler = async (event, context) => {
     if (stripeEvent.type === "customer.subscription.deleted") {
       const sub = stripeEvent.data.object;
       console.log("ℹ️ Subscription canceled:", sub.id, "customer:", sub.customer);
-      // Optionally: mark tenant inactive here
     }
 
     if (stripeEvent.type === "customer.subscription.updated") {
       const sub = stripeEvent.data.object;
       console.log("ℹ️ Subscription updated:", sub.id, "status:", sub.status);
-      // Optionally: update tenant’s plan/status here
     }
 
     return { statusCode: 200, body: "ok" };
