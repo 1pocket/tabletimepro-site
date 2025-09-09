@@ -1,10 +1,11 @@
 // netlify/functions/stripe-webhook.js
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const { getStore } = require("@netlify/blobs");
 const crypto = require("crypto");
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") return { statusCode: 405, body: "Method Not Allowed" };
+exports.handler = async (event, context) => {
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405, body: "Method Not Allowed" };
+  }
 
   const sig = event.headers["stripe-signature"];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -19,13 +20,14 @@ exports.handler = async (event) => {
 
   try {
     if (stripeEvent.type === "checkout.session.completed") {
-      const session = stripeEvent.data.object; // includes session.id, customer, subscription, etc.
+      const session = stripeEvent.data.object;
+
       const email =
         session.customer_details?.email ||
         session.customer_email ||
         "unknown@example.com";
 
-      // Try to expand to know price/plan (optional)
+      // Optionally expand to get price IDs
       let priceIds = [];
       try {
         const full = await stripe.checkout.sessions.retrieve(session.id, {
@@ -38,14 +40,19 @@ exports.handler = async (event) => {
         console.warn("Could not expand line items:", e.message);
       }
 
-      // Stores
-      const tenants = getStore("ttpro_customers");
-      const configs = getStore("ttpro_configs");
-      const maps = getStore("ttpro_maps");
+      // ✅ Use Netlify Function runtime Blobs stores
+      const tenants = context?.blobs?.store("ttpro_customers");
+      const configs = context?.blobs?.store("ttpro_configs");
+      const maps    = context?.blobs?.store("ttpro_maps");
+
+      if (!tenants || !configs || !maps) {
+        console.error("Blobs not available in function context");
+        return { statusCode: 500, body: "Blobs not available" };
+      }
 
       // 1) Ensure tenant record
       const tenantKey = `tenants/${session.customer}.json`;
-      let tenant = await tenants.get(tenantKey, { type: "json" });
+      let tenant = await tenants.getJSON(tenantKey);
       if (!tenant) {
         tenant = {
           customerId: session.customer,             // cus_...
@@ -56,30 +63,26 @@ exports.handler = async (event) => {
           secret: crypto.randomBytes(24).toString("hex"),
           createdAt: new Date().toISOString(),
         };
-        await tenants.set(tenantKey, JSON.stringify(tenant, null, 2), {
-          contentType: "application/json",
-        });
+        await tenants.setJSON(tenantKey, tenant);
       }
 
       // 2) Seed default config if none
       const cfgKey = `configs/${session.customer}.json`;
-      const existing = await configs.get(cfgKey);
+      const existing = await configs.getJSON(cfgKey);
       if (!existing) {
         const defaultConfig = {
           tables: ["Table 1", "Table 2", "Table 3", "Table 4"],
           staff: [],
           settings: { taxRate: 0, rounding: "none" },
         };
-        await configs.set(cfgKey, JSON.stringify(defaultConfig, null, 2), {
-          contentType: "application/json",
-        });
+        await configs.setJSON(cfgKey, defaultConfig);
       }
 
       // 3) Map session_id -> customer so success.html can fetch write key
-      await maps.set(
+      await maps.setJSON(
         `sessions/${session.id}.json`,
-        JSON.stringify({ customerId: session.customer }),
-        { contentType: "application/json", ttl: 60 * 60 * 24 } // 24h
+        { customerId: session.customer },
+        { ttl: 60 * 60 * 24 } // 24h
       );
 
       console.log("✅ Provisioned tenant", {
@@ -92,13 +95,13 @@ exports.handler = async (event) => {
     if (stripeEvent.type === "customer.subscription.deleted") {
       const sub = stripeEvent.data.object;
       console.log("ℹ️ Subscription canceled:", sub.id, "customer:", sub.customer);
-      // (optional) mark tenant inactive
+      // Optionally: mark tenant inactive here
     }
 
     if (stripeEvent.type === "customer.subscription.updated") {
       const sub = stripeEvent.data.object;
       console.log("ℹ️ Subscription updated:", sub.id, "status:", sub.status);
-      // (optional) update plan/status in tenant record
+      // Optionally: update tenant’s plan/status here
     }
 
     return { statusCode: 200, body: "ok" };
