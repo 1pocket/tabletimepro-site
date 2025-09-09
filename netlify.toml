@@ -14,3 +14,5 @@
   from = "/create-checkout"
   to = "/.netlify/functions/create-checkout-session"
   status = 200
+[build.environment]
+  NODE_VERSION = "20"
